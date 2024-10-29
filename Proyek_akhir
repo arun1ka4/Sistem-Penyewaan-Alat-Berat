@@ -1,0 +1,462 @@
+import csv
+csv_file = open("Data.csv")
+
+import pwinput
+from prettytable import PrettyTable
+from datetime import datetime
+import random
+
+# Fungsi Merge Sort untuk sorting
+def merge_sort(arr, key):
+    if len(arr) <= 1:
+        return arr
+    
+    tengah = len(arr) // 2
+    kiri = merge_sort(arr[:tengah], key)
+    kanan = merge_sort(arr[tengah:], key)
+    
+    return merge(kiri, kanan, key)
+
+def merge(kiri, kanan, key):
+    result = []
+    i = j = 0
+    
+    while i < len(kiri) and j < len(kanan):
+        if kiri[i][key] <= kanan[j][key]:
+            result.append(kiri[i])
+            i += 1
+        else:
+            result.append(kanan[j])
+            j += 1
+    
+    result.extend(kiri[i:])
+    result.extend(kanan[j:])
+    return result
+
+# Fungsi Jump Search untuk searching
+def jump_search(arr, x, key):
+    n = len(arr)
+    step = int(n ** 0.5)
+    
+    prev = 0
+    while prev < n and arr[min(step, n)-1][key] < x:
+        prev = step
+        step += int(n ** 0.5)
+        if prev >= n:
+            return -1
+    
+    while prev < min(step, n):
+        if arr[prev][key] == x:
+            return prev
+        prev += 1
+    
+    return -1
+
+# Fungsi untuk membaca data CSV
+def muat_data_csv(nama_file, kolom_header):
+    data = []
+    try:
+        with open(nama_file, "r", newline="") as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                # Konversi tipe data sesuai kebutuhan
+                for key, val in row.items():
+                    if val.isdigit():
+                        row[key] = int(val)
+                data.append(row)
+    except FileNotFoundError:
+        # Jika file tidak ditemukan, buat file baru dengan header yang diberikan
+        with open(nama_file, "w", newline="") as file:
+            writer = csv.DictWriter(file, fieldnames=kolom_header)
+            writer.writeheader()
+    return data
+
+# Fungsi untuk menyimpan data ke CSV
+def simpan_data_csv(nama_file, data, kolom_header):
+    with open(nama_file, "w", newline="") as file:
+        writer = csv.DictWriter(file, fieldnames=kolom_header)
+        writer.writeheader()
+        for row in data:
+            writer.writerow(row)
+
+class RentalSystem:
+    def __init__(self):
+        self.pengguna = muat_data_csv("Data.csv", ["Username", "Pw", "Role", "Saldo"])
+        self.produk = muat_data_csv("Data.csv", ["ID", "nama_alat", "Harga", "Status"])
+        self.transaksi = muat_data_csv("Data.csv", ["ID", "User", "id_alat", "nama_alat", "durasi", "harga_total", "tanggal"])
+        self.pengguna_saat_ini = None
+
+    def simpan_data(self):
+        simpan_data_csv("Data.csv", self.pengguna, ["Username", "Pw", "role", "saldo"])
+        simpan_data_csv("Data.csv", self.produk, ["ID", "Nama", "Harga", "Status"])
+        simpan_data_csv("Data.csv", self.transaksi, ["ID", "User", "id_alat", "nama_alat", "durasi", "harga_total", "tanggal"])
+
+
+    def registrasi(self):
+        print("\n=== REGISTRASI ===")
+        try:
+            username = input("Username: ")
+            if any(pengguna["Username"] == username for pengguna in self.pengguna):
+                print("Username sudah digunakan!")
+                return
+            
+            password = pwinput.pwinput(prompt="Pw: ")
+            role = "User"
+            saldo = 0
+            
+            self.pengguna.append({
+                "Username": username,
+                "Pw": password,
+                "Role": role,
+                "Saldo": saldo
+            })
+            self.simpan_data()
+            print("Registrasi berhasil!")
+        except Exception as e:
+            print(f"Terjadi kesalahan: {e}")
+
+    def login(self):
+        print("\n=== LOGIN ===")
+        try:
+            username = input("Username: ")
+            password = pwinput.pwinput(prompt="Pw: ")
+            
+            user = next((user for user in self.pengguna if user["Username"] == username and user["Pw"] == password), None)
+            
+            if user:
+                self.pengguna_saat_ini = user
+                print(f"Selamat datang, {username}!")
+                return True
+            else:
+                print("Username atau password salah!")
+                return False
+        except Exception as e:
+            print(f"Terjadi kesalahan: {e}")
+            return False
+
+    def top_up(self):
+        if not self.pengguna_saat_ini:
+            print("\nSilakan login terlebih dahulu!")
+            return False
+      
+        try:
+            jlh_top_up = int(input("Masukkan jumlah top up: "))
+            if jlh_top_up <= 0:
+                print("Jumlah top up harus lebih dari 0!")
+                return
+            
+            for user in self.pengguna:
+                if user["Username"] == self.pengguna_saat_ini["Username"]:
+                    user["Saldo"] += jlh_top_up
+                    self.pengguna_saat_ini = user
+                    break
+            
+            self.simpan_data()
+            print(f"Top up berhasil! Saldo sekarang: Rp{self.pengguna_saat_ini['Saldo']:,}")
+        except ValueError:
+            print("Berhasil Top Up!")
+        except Exception as e:
+            print(f"Terjadi kesalahan: {e}")
+
+    def tampilkan_produk(self):
+        if not self.produk:
+            print("Tidak ada produk tersedia.")
+            return
+        
+        tabel = PrettyTable()
+        tabel.field_names = ["ID", "Nama", "Harga", "Status"]
+        for produk in self.produk:
+            tabel.add_row([
+                produk["ID"],
+                produk["nama_alat"],
+                f"Rp{produk['Harga']:,}",
+                produk["Status"]
+            ])
+        print("\n=== DAFTAR ALAT BERAT ===")
+        print(tabel)
+
+    def sewa_alat(self):
+        if not self.pengguna_saat_ini:
+            print("Silakan login terlebih dahulu!")
+            return
+        
+        try:
+            self.tampilkan_produk()
+            id_produk = int(input("Masukkan ID alat yang ingin disewa: "))
+            durasi = int(input("Masukkan durasi sewa (hari): "))
+            
+            produk = next((p for p in self.produk if p["ID"] == id_produk), None)
+            if not produk:
+                print("ID alat tidak ditemukan!")
+                return
+                
+            if produk["Status"] != "tersedia":
+                print("Alat sedang tidak tersedia!")
+                return
+                
+            harga_total = produk["harga_total"] * durasi
+            if self.pengguna_saat_ini["Saldo"] < harga_total:
+                print("Saldo tidak mencukupi!")
+                return
+                
+            # Proses transaksi
+            id_transaksi = f"TRX{random.randint(10000, 99999)}"
+            tanggal_transaksi = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            
+            transaksi = {
+                "id": id_transaksi,
+                "User": self.pengguna_saat_ini["Username"],
+                "id_produk": id_produk,
+                "nama_produk": produk['nama'],
+                "durasi": durasi,
+                "harga_total": harga_total,
+                "tanggal": tanggal_transaksi
+            }
+            
+            self.transaksi.append(transaksi)
+            
+            # Update saldo dan status produk
+            for user in self.pengguna:
+                if user["Username"] == self.pengguna_saat_ini["Username"]:
+                    user["Saldo"] -= harga_total
+                    self.pengguna_saat_ini = user
+                    break
+                    
+            for p in self.produk:
+                if p["ID"] == id_produk:
+                    p["Status"] = "disewa"
+                    break
+                    
+            self.simpan_data()
+            self.print_invoice(transaksi)
+            
+        except ValueError:
+            print("Masukkan angka yang valid!")
+        except Exception as e:
+            print(f"Terjadi kesalahan: {e}")
+
+    def print_invoice(self, transaksi):
+        print("\n" + "="*40)
+        print("INVOICE PENYEWAAN ALAT BERAT")
+        print("="*40)
+        print(f"ID Transaksi  : {transaksi['id']}")
+        print(f"Tanggal       : {transaksi['tanggal']}")
+        print(f"User          : {transaksi['User']}")
+        print("-"*40)
+        print(f"Alat          : {transaksi['nama_alat']}")
+        print(f"Durasi Sewa   : {transaksi['durasi']} hari")
+        print(f"Total Biaya   : Rp{transaksi['harga_total']:,}")
+        print("="*40)
+        print("Terima kasih telah menggunakan layanan kami!")
+        print("="*40)
+
+    def menu_admin(self):
+        while True:
+            print("\n=== MENU ADMIN ===")
+            print("1. Lihat Daftar Produk")
+            print("2. Tambah Produk")
+            print("3. Edit Produk")
+            print("4. Hapus Produk")
+            print("5. Lihat Transaksi")
+            print("6. Keluar")
+            
+            pilih = input("Pilih menu (1-6): ")
+            
+            if pilih == "1":
+                self.tampilkan_produk()
+            elif pilih == "2":
+                self.tambah_produk()
+            elif pilih == "3":
+                self.edit_produk()
+            elif pilih == "4":
+                self.hapus_produk()
+            elif pilih == "5":
+                self.tampilkan_transaksi()
+            elif pilih == "6":
+                self.pengguna_saat_ini = None
+                break
+            else:
+                print("Menu tidak valid!")
+
+    def tambah_produk(self):
+        try:
+            print("\n=== TAMBAH PRODUK ===")
+            nama = input("Nama alat: ")
+            harga = int(input("Harga sewa per hari: "))
+            
+            id_baru = max(p["ID"] for p in self.produk) + 1 if self.produk else 1
+            
+            self.produk.append({
+                "ID": id_baru,
+                "nama_alat": nama,
+                "Harga": harga,
+                "Status": "tersedia"
+            })
+            
+            self.simpan_data()
+            print("Produk berhasil ditambahkan!")
+            
+        except ValueError:
+            print("Masukkan harga yang valid!")
+        except Exception as e:
+            print(f"Terjadi kesalahan: {e}")
+
+    def edit_produk(self):
+        try:
+            self.tampilkan_produk()
+            id_produk = int(input("Masukkan ID produk yang akan diedit: "))
+            
+            produk = next((p for p in self.produk if p["ID"] == id_produk), None)
+            if not produk:
+                print("ID produk tidak ditemukan!")
+                return
+                
+            nama_alat = input("Nama alat baru (kosongkan jika tidak diubah): ")
+            harga_str = input("Harga sewa baru (kosongkan jika tidak diubah): ")
+            
+            if nama_alat:
+                produk["nama_alat"] = nama_alat
+            if harga_str:
+                produk["Harga"] = int(harga_str)
+                
+            self.simpan_data()
+            print("Produk berhasil diupdate!")
+            
+        except ValueError:
+            print("Masukkan ID/harga yang valid!")
+        except Exception as e:
+            print(f"Terjadi kesalahan: {e}")
+
+    def hapus_produk(self):
+        try:
+            self.tampilkan_produk()
+            id_produk = int(input("Masukkan ID produk yang akan dihapus: "))
+            
+            produk = next((p for p in self.produk if p["ID"] == id_produk), None)
+            if not produk:
+                print("ID produk tidak ditemukan!")
+                return
+                
+            self.produk = [p for p in self.produk if p["ID"] != id_produk]
+            self.simpan_data()
+            print("Produk berhasil dihapus!")
+            
+        except ValueError:
+            print("Masukkan ID yang valid!")
+        except Exception as e:
+            print(f"Terjadi kesalahan: {e}")
+
+    def tampilkan_transaksi(self):
+        if not self.transaksi:
+            print("Belum ada transaksi.")
+            return
+            
+        tabel = PrettyTable()
+        tabel.field_names = ["ID", "User", "Alat", "Durasi", "Total", "Tanggal"]
+        for trx in self.transaksi:
+            tabel.add_row([
+                trx["ID"],
+                trx["User"],
+                trx["nama_alat"],
+                f"{trx['durasi']} hari",
+                f"Rp{trx['harga_total']:,}",
+                trx["tanggal"]
+            ])
+        print("\n=== DAFTAR TRANSAKSI ===")
+        print(tabel)
+
+    def menu_user(self):
+        while True:
+            print("\n=== MENU USER ===")
+            print("1. Lihat Saldo")
+            print("2. Top Up Saldo")
+            print("3. Lihat Daftar Alat")
+            print("4. Sewa Alat")
+            print("5. Riwayat Transaksi")
+            print("6. Keluar")
+            
+            pilih = input("Pilih menu (1-6): ")
+            
+            if pilih == "1":
+                print(f"Saldo Anda: Rp{self.pengguna_saat_ini['Saldo']:,}")
+            elif pilih == "2":
+                self.top_up()
+            elif pilih == "3":
+                self.tampilkan_produk()
+            elif pilih == "4":
+                self.sewa_alat()
+            elif pilih == "5":
+                self.tampilkan_transaksi_pengguna()
+            elif pilih == "6":
+                self.pengguna_saat_ini = None
+                break
+            else:
+                print("Menu tidak valid!")
+
+    def tampilkan_transaksi_pengguna(self):
+        transaksi_pengguna = [t for t in self.transaksi if t["User"] == self.pengguna_saat_ini["Username"]]
+        
+        if not transaksi_pengguna:
+            print("Anda belum memiliki transaksi.")
+            return
+            
+        tabel = PrettyTable()
+        tabel.field_names = ["ID", "Alat", "Durasi", "Total", "Tanggal"]
+        for trx in transaksi_pengguna:
+            tabel.add_row([
+                trx["id"],
+                trx["nama_produk"],
+                f"{trx['durasi']} hari",
+                f"Rp{trx['harga_total']:,}",
+                trx["tanggal"]
+            ])
+        print("\n=== RIWAYAT TRANSAKSI ANDA ===")
+        print(tabel)
+
+    def main_menu(self):
+        while True:
+            print("\n=== SISTEM PENYEWAAN ALAT BERAT ===")
+            print("1. Login")
+            print("2. Registrasi")
+            print("3. Keluar")
+            
+            pilihan = input("Pilih menu (1-3): ")
+            
+            if pilihan == "1":
+                if self.login():
+                    if self.pengguna_saat_ini["Role"] == "admin":
+                        self.menu_admin()
+                    else:
+                        self.menu_user()
+            elif pilihan == "2":
+                self.registrasi()
+            elif pilihan == "3":
+                print("Terima kasih telah menggunakan sistem kami!")
+                break
+            else:
+                print("Menu tidak valid!")
+
+def setelan_admin():
+    # Membuat akun admin default jika belum ada
+    try:
+        pengguna = muat_data_csv("Data.csv", ["Username", "Pw", "Role", "Saldo"])
+        if not any(user["Role"] == "admin" for user in pengguna):
+            admin = {
+                "Username": "Kel 4",
+                "Pw": "12345",
+                "Role": "admin",
+                "Saldo": 0
+            }
+            pengguna.append(admin)
+            simpan_data_csv("Data.csv", pengguna, ["Username", "Pw", "Role", "Saldo"])
+    except Exception as e:
+        print(f"Terjadi kesalahan saat menyiapkan admin: {e}")
+
+if __name__ == "__main__":
+    try:
+        setelan_admin()
+        sistem_sewa = RentalSystem()
+        sistem_sewa.main_menu()
+    except Exception as e:
+        print(f"Terjadi kesalahan pada sistem: {e}")
+        print("Sistem akan ditutup.")
