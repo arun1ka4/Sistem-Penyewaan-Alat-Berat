@@ -373,3 +373,26 @@ def jump_search(arr, x, key):
         prev += 1
     
     return -1
+
+# Data.csv
+ID, nama alat, harga per hari, status, pemilik
+1, Excavator, 1500000, tersedia, ""
+2, Bulldozer, 2000000, tersedia, ""
+3, Crane, 2000000, tersedia, ""
+4, Forklift, 950000, tersedia, ""
+5, Dozer, 1000000, tersedia, ""
+
+# userpass.csv
+username, Pw
+Nayla, 56789
+Elmy, 67890
+
+# data_pemasukan.csv
+ID, User , id_alat, nama_alat, durasi, harga_total, tanggal
+
+# adminpass.csv
+username, Pw
+Manisha, 12345
+
+# Data_user.csv
+username, ID alat, tanggal bayar, tanggal kembali, saldo
