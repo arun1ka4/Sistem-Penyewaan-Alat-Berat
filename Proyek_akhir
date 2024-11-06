@@ -373,7 +373,7 @@ def tampilkan_invoices(user):
             equipment = next((item for item in List_AlatBerat if item["Code"] == invoice.code), None)
             if equipment:
                 print("=" * 50)
-                print(f"\nAlat: {equipment['Jenis Alat']} - {equipment['Merk']}")
+                print(f"\nAlat: {equipment['Jenis Alat']}")
                 print(f"Total jam: {invoice.total_jam}")
                 print(f"Total Biaya: Rp. {invoice.total_biaya}")
                 print(f"Tanggal Transaksi: {invoice.tanggal_transaksi}")  # Tampilkan tanggal transaksi
