@@ -127,7 +127,7 @@ def tambah_List_AlatBerat(Code, Jenis_Alat, Biaya_Rental, stok_Alat):
                     })
                 print("Data Alat Berat berhasil ditambahkan.\n")
             else:
-                print("Inputan tidak valid\n")
+                print("Isi datanya cuk, jangan kosong\n")
     except Exception as e:
         print(f"Terjadi kesalahan saat menambah data alat berat: {e}")
 
@@ -214,14 +214,22 @@ def loginAdmin():
             while True: # Jika login berhasil, tampilkan menu utama
                 print("\n================================Menu Utama Admin================================\n")
                 print("Selamat Datang!")
-                print("1. Tambah Data")
-                print("2. Lihat Data")
-                print("3. Perbarui Data")
-                print("4. Hapus Data")
+                print("1. Lihat Daftar Alat")
+                print("2. Tambah Alat")
+                print("3. Update Alat")
+                print("4. Hapus Alat")
                 print("5. Kembali")
                 pilihan = input("Pilih menu (1/2/3/4/5): ")
 
                 if pilihan == '1':
+                    print("\n===============================Lihat Data===============================\n")
+                    data = baca_List_AlatBerat()
+                    tabel = PrettyTable(["Code", "Jenis Alat", "Biaya Rental", "stok Alat"])
+                    for row in data: # Menampilkan data menggunakan PrettyTable
+                        tabel.add_row([row['Code'], row['Jenis Alat'], row['Biaya Rental'], row['stok Alat']])
+                    print(tabel)
+
+                elif pilihan == '2':
                     print("\n===============================Tambah Data===============================\n")
                     Code = input("Masukkan Code: ")
                     Jenis_Alat = input("Masukkan Jenis Alat: ")
@@ -241,35 +249,13 @@ def loginAdmin():
                     # Memanggil fungsi tambah_List_AlatBerat dengan input yang diberikan
                     tambah_List_AlatBerat(Code, Jenis_Alat, Biaya_Rental, stok_Alat)
 
-                elif pilihan == '2':
-                    print("\n===============================Lihat Data===============================\n")
-                    data = baca_List_AlatBerat()
-                    tabel = PrettyTable(["Code", "Jenis Alat", "Biaya Rental", "stok Alat"])
-                    for row in data: # Menampilkan data menggunakan PrettyTable
-                        tabel.add_row([row['Code'], row['Jenis Alat'], row['Biaya Rental'], row['stok Alat']])
-                    print(tabel)
-
-
                 elif pilihan == '3':
-                    print("\n===============================Perbarui Data===============================\n")
+                    print("\n=============================== Update Data ===============================\n")
                     perbarui_List_AlatBerat()
 
                 elif pilihan == '4':
-                    print("\n===============================Hapus Data===============================\n")
-                    Code = input("Masukkan Code yang ingin dihapus: ")
-                    data = baca_List_AlatBerat()
-                    code_exists = False # Inisialisasi variabel code_exists sebagai False
-
-                    for row in data:
-                        if row['Code'] == Code: # Memeriksa jika Code yang ingin dihapus ada dalam data
-                            code_exists = True # Jika Code ditemukan, set code_exists ke True
-                            break
-
-                    if code_exists: # Jika Code ada dalam data
-                        hapus_List_AlatBerat(Code)
-                        print(f"Data dengan Code {Code} berhasil dihapus.\n")
-                    else:
-                        print(f"Data dengan Code {Code} tidak ditemukan.\n")
+                    print("\n=============================== Hapus Data ===============================\n")
+                    hapus_List_AlatBerat()
 
                 elif pilihan == '5':
                     return
@@ -406,13 +392,13 @@ def pilihan_user(user):
         pilih = input("Pilih (1/2/3/4/5): ")
 
         if pilih == "1":
-            print("\n==========================Melakukan Transaksi==========================\n")
+            print("\n========================== Melakukan Transaksi ==========================\n")
             melakukan_transaksi(user)
         elif pilih == "2":
-            print("\n==========================Lihat Transaksi==========================\n")
+            print("\n========================== Lihat Transaksi ==========================\n")
             tampilkan_invoices(user)
         elif pilih == "3":
-            print("\n==========================Tambah Saldo==========================\n")
+            print("\n========================== Top Up E-Money ==========================\n")
             tambah_saldo(user)
         elif pilih == "4":
             print("\n==========================Lihat Saldo==========================\n")
@@ -424,7 +410,7 @@ def pilihan_user(user):
 
 # Main program
 while True:
-    print("\n=====================================Login=====================================\n")
+    print("\n===================================== Sewa Alat Berat Transformer =====================================\n")
     print("1. Admin")
     print("2. User")
     print("3. Keluar")
@@ -434,19 +420,19 @@ while True:
         print("\n=====================================Admin=====================================\n")
         loginAdmin()
     elif pilihan == "2":
-        print("\n=====================================User=====================================\n")
+        print("\n===================================== Customer =====================================\n")
         while True:
-            print("1. Login")
-            print("2. Registrasi")
+            print("1. Registrasi")
+            print("2. Login")
             print("3. Kembali")
             pilihan_user_login = input("Pilih (1/2/3): ")
 
             if pilihan_user_login == "1":
+                registrasi_user() # Jalankan fungsi untuk registrasi user
+            elif pilihan_user_login == "2":
                 user = login_user() # Jalankan fungsi login_user() untuk login
                 if user:
                     pilihan_user(user) # Jika user berhasil login, jalankan fungsi untuk opsi user
-            elif pilihan_user_login == "2":
-                registrasi_user() # Jalankan fungsi untuk registrasi user
             elif pilihan_user_login == "3":
                 break 
             else:
