@@ -1,6 +1,6 @@
 import csv
-import pwinput # untuk menyembunyikan password
-from prettytable import PrettyTable # untuk membuat tampilan tabel
+import pwinput 
+from prettytable import PrettyTable 
 from datetime import datetime
 
 admin = {'nama': 'Manisha', 'password': '12345'}
@@ -15,6 +15,14 @@ def simpan_users_ke_csv():
 
         for user in users:  # Tulis setiap baris data pengguna ke dalam file CSV
             writer.writerow({'nama': user.nama, 'password': user.password, 'saldo': user.saldo})
+
+def baca_data_user():
+    data_user = []
+    with open('Data_user.csv', mode='r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            data_user.append(row)
+    return data_user
 
 # fungsi memuat daata user dari file csv
 def load_users_dari_csv():
@@ -203,6 +211,20 @@ def hapus_List_AlatBerat():
     except Exception as e:
         print(f"Terjadi kesalahan saat menghapus data alat berat: {e}")
 
+def hapus_user():
+    try:
+        username = input("Masukkan username yang ingin dihapus: ")
+        user_ditemukan = next((u for u in users if u.nama == username), None)
+
+        if user_ditemukan:
+            users.remove(user_ditemukan)  # Remove user from the list
+            simpan_users_ke_csv()  # Save changes to CSV
+            print(f"User  '{username}' berhasil dihapus.\n")
+        else:
+            print(f"User  '{username}' tidak ditemukan.\n")
+    except Exception as e:
+        print(f"Terjadi kesalahan saat menghapus user: {e}")
+
 # Login sebagai admin
 def loginAdmin():
     while True: 
@@ -218,7 +240,8 @@ def loginAdmin():
                 print("2. Tambah Alat")
                 print("3. Update Alat")
                 print("4. Hapus Alat")
-                print("5. Kembali")
+                print("5. Hapus User")
+                print("6. Keluar")
                 pilihan = input("Pilih menu (1/2/3/4/5): ")
 
                 if pilihan == '1':
@@ -258,6 +281,10 @@ def loginAdmin():
                     hapus_List_AlatBerat()
 
                 elif pilihan == '5':
+                    print("\n=============================== Hapus User ===============================\n")
+                    hapus_user()
+
+                elif pilihan == '6':
                     return
 
                 else:
