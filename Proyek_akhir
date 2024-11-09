@@ -16,6 +16,14 @@ def simpan_users_ke_csv():
         for user in users:  # Tulis setiap baris data pengguna ke dalam file CSV
             writer.writerow({'nama': user.nama, 'password': user.password, 'saldo': user.saldo})
 
+def baca_data_user():
+    data_user = []
+    with open('Data_user.csv', mode='r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            data_user.append(row)
+    return data_user
+
 # fungsi memuat daata user dari file csv
 def load_users_dari_csv():
     try:
@@ -111,7 +119,6 @@ def tambah_List_AlatBerat(Code, Jenis_Alat, Biaya_Rental, stok_Alat):
         with open(file_name, mode='r', newline='') as file:  # Membuka file CSV untuk pembacaan
             reader = csv.DictReader(file)  # Membaca file sebagai dictionary
             data = list(reader)  # Membuat list dari data yang terbaca
-
 
         if any(row['Code'] == Code for row in data):
             print("Code sudah ada di Data\n")
@@ -210,8 +217,8 @@ def hapus_user():
         user_ditemukan = next((u for u in users if u.nama == username), None)
 
         if user_ditemukan:
-            users.remove(user_ditemukan)  # Menghapus user dari data
-            simpan_users_ke_csv()  # Menyimpan data user ke CSV
+            users.remove(user_ditemukan)  # Remove user from the list
+            simpan_users_ke_csv()  # Save changes to CSV
             print(f"User  '{username}' berhasil dihapus.\n")
         else:
             print(f"User  '{username}' tidak ditemukan.\n")
@@ -252,9 +259,11 @@ def loginAdmin():
                     Biaya_Rental = input("Masukkan Biaya Rental: ")
                     stok_Alat = (input("Masukkan Stok Alat: "))
                     data = baca_List_AlatBerat()
+                    code_exists = False # Inisialisasi variabel code_exists sebagai False
 
                     for row in data:
                         if row['Code'] == Code: # Memeriksa jika Code sudah ada di data
+                            code_exists = True # Inisialisasi variabel code_exists sebagai True
                             break
                     if stok_Alat.isnumeric():
                         if int(stok_Alat) < 0:
@@ -427,35 +436,39 @@ def pilihan_user(user):
             print("Pilihan tidak valid.\n")
 
 # Main program
-while True:
-    print("\n===================================== Sewa Alat Berat Transformer =====================================\n")
-    print("1. Admin")
-    print("2. User")
-    print("3. Keluar")
-    pilihan = input("Masukkan pilihan: ")
+try:
+    while True:
+        print("\n===================================== Sewa Alat Berat Transformer =====================================\n")
+        print("1. Admin")
+        print("2. User")
+        print("3. Keluar")
+        pilihan = input("Masukkan pilihan: ")
 
-    if pilihan == "1":
-        print("\n=====================================Admin=====================================\n")
-        loginAdmin()
-    elif pilihan == "2":
-        print("\n===================================== Customer =====================================\n")
-        while True:
-            print("1. Registrasi")
-            print("2. Login")
-            print("3. Kembali")
-            pilihan_user_login = input("Pilih (1/2/3): ")
+        if pilihan == "1":
+            print("\n=====================================Admin=====================================\n")
+            loginAdmin()
+        elif pilihan == "2":
+            print("\n===================================== Customer =====================================\n")
+            while True:
+                print("1. Registrasi")
+                print("2. Login")
+                print("3. Kembali")
+                pilihan_user_login = input("Pilih (1/2/3): ")
 
-            if pilihan_user_login == "1":
-                registrasi_user() # Jalankan fungsi untuk registrasi user
-            elif pilihan_user_login == "2":
-                user = login_user() # Jalankan fungsi login_user() untuk login
-                if user:
-                    pilihan_user(user) # Jika user berhasil login, jalankan fungsi untuk opsi user
-            elif pilihan_user_login == "3":
-                break 
-            else:
-                print("Pilihan tidak valid.\n")
-    elif pilihan == "3":
-        break
-    else:
-        print("Pilihan tidak valid. Coba lagi!\n")
+                if pilihan_user_login == "1":
+                    registrasi_user() # Jalankan fungsi untuk registrasi user
+                elif pilihan_user_login == "2":
+                    user = login_user() # Jalankan fungsi login_user() untuk login
+                    if user:
+                        pilihan_user(user) # Jika user berhasil login, jalankan fungsi untuk opsi user
+                elif pilihan_user_login == "3":
+                    break 
+                else:
+                    print("Pilihan tidak valid.\n")
+        elif pilihan == "3":
+            break
+        else:
+            print("Pilihan tidak valid. Coba lagi!\n")
+except KeyboardInterrupt:
+    print("Program dihentikan!")
+    exit()
