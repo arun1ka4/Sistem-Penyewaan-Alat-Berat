@@ -68,7 +68,53 @@ Variabel file_name merupakan nama file CSV yang akan digunakan.
 
 ![image](https://github.com/user-attachments/assets/680fb62c-4eb8-4a79-be66-f2a4f4b0b157)
 
-=> Program diatas berfungsi untuk memperbarui data dalam file CSV. Fungsi variabel data ini memanggil baca_List_AlatBerat() untuk membaca data alat berat yang tersimpan dalam file CSV. Data ini akan disimpan dalam variabel data, yang berupa list dari dictionary, di mana setiap dictionary merepresentasikan satu alat berat. Fungsi variabel code yaitu user diminta untuk memasukkan kode alat yang ingin diperbarui yang akan digunakan untuk mencari alat yang relevan dalam data.
+=> Program diatas berfungsi untuk memperbarui data dalam file CSV. Fungsi variabel data ini memanggil baca_List_AlatBerat() untuk membaca data alat berat yang tersimpan dalam file CSV. Data ini akan disimpan dalam variabel data, yang berupa list dari dictionary, di mana setiap dictionary merepresentasikan satu alat berat. Fungsi variabel code yaitu user diminta untuk memasukkan kode alat yang ingin diperbarui yang akan digunakan untuk mencari alat yang relevan dalam data. Fungsi variabel alat_ditemukan berfungsi untuk melakukan iterasi melalui setiap baris dalam data untuk mencari alat yang memiliki kode yang sesuai. Jika ditemukan, variabel alat_ditemukan diatur ke True, dan informasi mengenai alat tersebut ditampilkan. Jika alat ditemukan, program menampilkan informasi saat ini dari alat seperti gambar dibawah ini
+
+![image](https://github.com/user-attachments/assets/bf33b9c2-1897-469d-8175-85b476b7d5ac)
+
+=> Kemudian, pengguna diminta untuk memasukkan informasi baru dengan program dibawah ini
+
+![image](https://github.com/user-attachments/assets/a9fcfc44-f3b4-4879-8aa9-054082d83463)
+
+=> Untuk stok, program memeriksa apakah input adalah angka non-negatif dengan program dibawah ini
+
+![image](https://github.com/user-attachments/assets/8bb93e4b-2059-4c86-ba1f-b79513918b75)
+
+=> Jika alat ditemukan dan informasi diperbarui, data yang telah diperbarui disimpan kembali ke file CSV menggunakan program di bawah ini
+
+![image](https://github.com/user-attachments/assets/9839db54-5427-434d-93be-f3f1a3bf990d)
+
+=> Dalam program ini, file dibuka dalam mode tulis ('w'), yang akan menghapus konten lama dan menulis konten baru. Header ditulis kembali, diikuti dengan data yang telah diperbarui.
+
+![image](https://github.com/user-attachments/assets/ca0607a4-17b0-42ac-aa23-4f624693c311)
+
+=> Program diatas berfungsi untuk menghapus data dari file CSV. Fungsi Fitur lainnya kurang lebih sama dengan fungsi fitur yang telah di jelaskan sebelumnya.
+
+![image](https://github.com/user-attachments/assets/fb7e5277-e9fa-4249-a07d-2f2b6bb7db44)
+
+=> Program diatas berfungsi untuk menghapus user dari file CSV. jika user terdapat pada file csv maka program dapat menghapus user dengan fungsi users.remove dan akan mencetak user 'username' berhasil dihapus. dan jika program tidak menemukan user maka program akan mencetak Use 'username' tidak ditemukan. jika terjadi error maka fungsi except akan mencetak terjadi kesalahan saat menghapus user.
+
+![image](https://github.com/user-attachments/assets/94d57072-6b77-40ce-b961-ff277eeaf3fe)
+
+=> Program diatas merupakam Fitur menu login admin. variabel loguser bermaksud agar memasukkan username admin dan logpw adalah melakukan input password admin. Fungsi pwinput adalah menyembunyikan karakter password. fungsi if adalah jika username dan password admin sesuai maka program akan menampilkan menu admin.
+
+![image](https://github.com/user-attachments/assets/0fd669a1-9b8f-4c7c-83f8-628979ef02d3)
+
+=> jika memilih '1' maka program akan menampilkan data menggunakan prettytable
+
+![image](https://github.com/user-attachments/assets/c14ccba4-daaf-4e32-a444-9fdd8cb9fbe9)
+
+=> jika memilih '2' maka program akan menjalankan fungsi untuk menginput data agar admin dapat menambahkan alat
+
+![image](https://github.com/user-attachments/assets/029571df-80f9-4869-b0cf-8e63ee0a05c2)
+
+=> Program diatas digunakan untuk memeriksa apakah kode sudah ada di data. Sedangkan fungsi tambah_List_AlatBerat digunakan untuk memanggil fungsi dengan input yang diberikan.
+
+
+
+
+
+
 
 
 
