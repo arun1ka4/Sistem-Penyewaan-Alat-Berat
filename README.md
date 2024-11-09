@@ -37,9 +37,38 @@ Nama : Elmy Fadillah,    NIM : 2409116075
 
 ![image](https://github.com/user-attachments/assets/ec444381-8786-4300-8ebc-d858a837c2a3)
 
-=> Program diatas berfungsi untuk memuat data user dari file CSV
+=> Program diatas berfungsi untuk memuat data user dari file CSV. Penggunaan fungsi with open yaitu untuk membuka file csv dalam mode baca 'r'  sedangkan fungsi newline digunakan untuk menangani baris baru secara konsisten. Fungsi csv.DictReader(file) digunakan untuk membaca file CSV dan mengonversi setiap baris menjadi kamus (dictionary) di mana nama kolom menjadi kunci. Dalam loop fungsi for row in reader, dictionary diambil dan digunakan untuk membuat objek User  dengan atribut nama, password, dan saldo. Objek ini kemudian ditambahkan ke dalam list users. Fungsi FileNotFoundError digunakan jika file users.csv tidak ditemukan, program akan mencetak pesan yang menyatakan bahwa file tidak ada dan memulai dengan data kosong.
 
+![image](https://github.com/user-attachments/assets/5ad87c67-263b-497f-a006-2d3bda87eb61)
 
+=> Fungsi tambah saldo digunakan untuk menambahkan saldo ke akun user. Fungsi ini didefinisikan dengan nama tambah_saldo dan menerima satu parameter yaitu user.Fungsi variabel jumlah_saldo yaitu untuk meminta pengguna untuk memasukkan jumlah saldo yang ingin ditambahkan. Input ini kemudian diubah menjadi integer. Fungsi if pada program yaitu untuk memeriksa apakah jumlah saldo yang dimasukkan lebih besar dari nol. Fungsi simpan_users_ke_csv() dipanggil untuk menyimpan perubahan saldo ke dalam file CSV . Fungsi ValueError digunakan jika pengguna memasukkan nilai yang tidak dapat diubah menjadi integer (misalnya, huruf atau simbol), program akan menangkap kesalahan ini dan mencetak pesan yang sesuai. Fungsi Exception as e digunakan untuk menangani kesalahan lain yang mungkin terjadi saat menambahkan saldo, program mencetak pesan kesalahan yang spesifik.
+
+![image](https://github.com/user-attachments/assets/bbaa6030-7c42-4abe-af13-b9b9034657d6)
+
+=> Fungsi Class User digunakan untuk merepresentasikan pengguna dalam sistem. Fungsi __init__ Method adalah metode konstruktor yang dipanggil ketika objek dari kelas User dibuat. Parameternya yaitu nama (nama user), password, saldo (Saldo pengguna, dengan nilai bawaan 0 jika tidak diberikan). Atributnya yaitu self.nama, self.password, self.saldo, self.invoice yang digunakan untuk menyimpan masing masing data. Fungsi Class digunakan untuk mempresentasikan invoice untuk setiap transaksi yang dilakukan oleh pengguna. Parameternya yaitu user (Objek User  yang terkait dengan invoice ini), code yaitu Kode unik untuk invoice ini, total_jam yaitu Total jam yang digunakan dalam transaksi, total_biaya yaitu Total biaya yang harus dibayar untuk transaksi tersebut. Atributnya yaitu self.user yang digunakan untuk menyimpan referensi ke objek User  yang terkait dengan invoice ini, self.code yang digunakan untuk menyimpan kode invoice, self.total_jam yang digunakan untuk menyimpan total jam yang digunakan dalam transaksi, self.total_biaya yang digunakan untuk menyimpan total biaya dari transaksi, self.tanggal_transaksi yang digunakan untuk menyimpan tanggal dan waktu transaksi saat invoice dibuat. Ini menggunakan datetime.now() untuk mendapatkan waktu saat ini dan memformatnya menjadi string
+
+![image](https://github.com/user-attachments/assets/d752106b-1a03-4488-8b96-f5558faff8e1)
+
+=> Program diatas merupakan dictionary alat yang ditawarkan, data list alat berat bisa dibaca dari file CSV atau diinisialisasi di dalam kode.
+
+![image](https://github.com/user-attachments/assets/41ab63b7-6f1a-49bb-ace0-64454ee51644)
+
+=> Program diatas berfungsi untuk menyimpan dataList_AlatBerat ke dalam file CSV. Fungsi with open yaitu untuk membuka file CSV dan menulis data alat berat ke dalamnya. Variabel fieldnames digunakan untuk menulis nama kolom dan sebagai objek writer. lalu fungsi writerheader digunakan untyk menulis kolom header. fungsi for adalah melakukan perulangan yang memiliki batas sedangkan writerow berfungsi untuk menulis setiap baris data alat berat ke dalam file CSV. Fungsi dataList_AlatBerat() digunakan untuk memanggil fungsi dataList_AlatBerat untuk menyimpan data alat berat ke dalam file CSV.
+Variabel file_name merupakan nama file CSV yang akan digunakan.
+
+![image](https://github.com/user-attachments/assets/d2f3a783-8b8f-4b42-8dcd-c575bc084318)
+
+=> Program diatas berfungsi untuk membaca semua data dari file CSV. Variabel data digunakan sebagai inisialisasi list untuk menampung data dari file CSV. Fungsi with open digunakan untuk membuka file CSV, variabel reader digunakan untuk membaca file sebagai dictionary, Fungsi for row in reader digunakan untuk loop setiap baris data dalam file CSV, sedangkan data.append(row) digunakan untuk menambahkan setiap baris data ke dalam list data. Fungsi return yaitu untuk mengembalikan data yang telah terbaca dari file csv .
+
+![image](https://github.com/user-attachments/assets/58066e1f-7f8c-42c8-9ac6-6ef7ef86fda6)
+
+=> Program diatas berfungsi untuk menambahkan data alat baru ke file CSV. Fitur yang lain kurang lebih sama dengan yang dijelaskan sebelumnya.
+
+![image](https://github.com/user-attachments/assets/bfb1a5c1-3ec3-4252-839d-e54dbf33a7b2)
+
+![image](https://github.com/user-attachments/assets/680fb62c-4eb8-4a79-be66-f2a4f4b0b157)
+
+=> Program diatas berfungsi untuk memperbarui data dalam file CSV. Fungsi variabel data ini memanggil baca_List_AlatBerat() untuk membaca data alat berat yang tersimpan dalam file CSV. Data ini akan disimpan dalam variabel data, yang berupa list dari dictionary, di mana setiap dictionary merepresentasikan satu alat berat. Fungsi variabel code yaitu user diminta untuk memasukkan kode alat yang ingin diperbarui yang akan digunakan untuk mencari alat yang relevan dalam data.
 
 
 
