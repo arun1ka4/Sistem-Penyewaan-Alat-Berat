@@ -110,7 +110,17 @@ Variabel file_name merupakan nama file CSV yang akan digunakan.
 
 => Program diatas digunakan untuk memeriksa apakah kode sudah ada di data. Sedangkan fungsi tambah_List_AlatBerat digunakan untuk memanggil fungsi dengan input yang diberikan.
 
+![image](https://github.com/user-attachments/assets/3eb8f824-c3be-4d9c-9c9b-cfc9d5c86ca0)
 
+=> Jika memilih '3' maka program akan memanggil fungsi perbarui_List_AlatBerat.
+
+![image](https://github.com/user-attachments/assets/94aaca54-44a7-4a1b-aea4-3b93e0c71e03)
+
+=> Jika memilih '6' maka program akan memanggil fungsi hapus_List_AlatBerat.
+
+![image](https://github.com/user-attachments/assets/a93398be-fa50-45e9-8558-f941da440ae4)
+
+=> Jika memilih '5' maka program akan memanggil fungsi hapus_user.
 
 
 
